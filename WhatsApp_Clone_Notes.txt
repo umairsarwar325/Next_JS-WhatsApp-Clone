@@ -1,0 +1,121 @@
+--------- WHATSAPP_CLONE ---------
+
+1. Dependencies
+  -> client
+    - "next":
+    - "react": 
+    - "react-dom": 
+    - "postcss": 
+    - "tailwindcss": 
+    - "autoprefixer": 
+    - "axios": for api calling
+    - "emoji-picker-react": for emojis
+    - "firebase": for auth
+    - "react-icons": for icons
+    - "react-image-file-resizer": for resizig the images
+    - "socket.io-client": for client side sockets
+    - "wavesurfer.js": for audio wave forms
+    - "zego-express-engine-webrtc": for video and audio calling
+
+  -> server
+    - "@prisma/client": for database management
+    - "cors": for handling cross origin requests
+    - "crypto": for token genration
+    - "dotenv": for envionment variable
+    - "express": for apis
+    - "multer": for handling files
+    - "nodemon": for starting the server
+    - "prisma": 
+    - "socket.io": for server side sockets
+  
+2. Setup Fire base auth
+  -> setup firebaseConfig and export firebaseAuth (utils/FirebaseConfig.js)
+  
+2. Setup Fire base auth
+  -> setup firebaseConfig and export firebaseAuth (utils/FirebaseConfig.js)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
