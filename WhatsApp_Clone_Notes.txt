@@ -28,11 +28,57 @@
     - "prisma": 
     - "socket.io": for server side sockets
   
-2. Setup Fire base auth
+2. Setup Firebase auth
   -> setup firebaseConfig and export firebaseAuth (utils/FirebaseConfig.js)
   
-2. Setup Fire base auth
-  -> setup firebaseConfig and export firebaseAuth (utils/FirebaseConfig.js)
+3. Setup Prisma (In Server Folder)
+  -> npx prisma init
+  -> in .env
+    - DATABASE_URL="mongodb://localhost:27017/WhatsAppClone"
+  -> in prisma/schema.prisma
+    - Setup DataBase
+      datasource db {
+        provider = "mongodb"
+        url      = env("DATABASE_URL")
+      }
+    - Setup Models
+      model User {
+        Id Int @id @map("_id")
+        email String @unique
+      }
+  -> npx prisma generate
+  -> npx prisma db push 
+  -> npx prisma studio 
+
+  -> To use prisma create a prisma client (utils/prismaClient.js)
+      import { PrismaClient } from "@prisma/client";
+
+      let prismaInstance = null;
+
+      const getPrismaInstance = () => {
+        if (!prismaInstance) {
+          prismaInstance = new PrismaClient();
+        }
+        return prismaInstance;
+      };
+
+4. Setup Node Server (In Server Folder)
+  -> create APIs
+
+5. Login with Google
+    const provider = new GoogleAuthProvider();
+    const { user } = await signInWithPopup(firebaseAuth, provider);
+
+6. Setup Redux store
+
+7. Creating Conext Menu (components/common/ContextMenu.jsx)
+
+8. React Portal (components/common/PhotoPicker.jsx)
+  -> by default react renders components inside root (in NEXT renders inside _next)
+  -> using portals we tell NEXT to render the components inside custom div
+    
+
+
 
 
 
