@@ -1,18 +1,26 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import axios from "axios";
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo, setNewUser } from "@/store/slices/authSlice";
 
 function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { userInfo, newUser } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!newUser && userInfo?.id) {
+      router.push("/");
+    }
+  }, [newUser, userInfo, router]);
+
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(firebaseAuth, provider);
@@ -28,10 +36,23 @@ function Login() {
               email: user.email,
               name: user.displayName,
               profilePicture: user.photoURL,
-              status: "",
+              about: "",
             })
           );
           router.push("/onboarding");
+        } else {
+          const { id, email, name, profilePicture, about } = data?.data;
+          dispatch(setNewUser(false));
+          dispatch(
+            setUserInfo({
+              id,
+              email,
+              name,
+              profilePicture,
+              about,
+            })
+          );
+          router.push("/");
         }
       }
     } catch (error) {

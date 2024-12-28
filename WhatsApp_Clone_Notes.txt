@@ -77,6 +77,38 @@
   -> by default react renders components inside root (in NEXT renders inside _next)
   -> using portals we tell NEXT to render the components inside custom div
     
+9. Created take photo, choose from library & upload photo features (avatar.js, onboarding/page.jsx)  
+
+10. built create-user api (server/controllers/AuthController.js)  
+
+11. on route changes checking in client app if user is still loggged in using firebase auth:
+       onAuthStateChanged(firebaseAuth, async (currentUser) => {
+          if (!currentUser) {
+            setRedirectLogin(true);
+          }
+          if (!userInfo && currentUser?.email) {
+            const { data } = await axios.post(CHECK_USER_ROUTE, {
+              email: currentUser?.email,
+            });
+            if (data.status && data.data) {
+              const { id, email, name, about, profilePicture } = data.data;
+              dispatch(setNewUser(false));
+              dispatch(
+                setUserInfo({
+                  id,
+                  email,
+                  name,
+                  status: about,
+                  profilePicture,
+                })
+              );
+            } else {
+              dispatch(setUserInfo(null));
+              dispatch(setNewUser(false));
+              router.push("/login");
+            }
+          }
+        });
 
 
 

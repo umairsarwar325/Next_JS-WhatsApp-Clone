@@ -1,23 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import Avatar from "@/components/common/Avatar";
 import Input from "@/components/common/Input";
-
+import { CREATE_USER_ROUTE } from "@/utils/ApiRoutes";
+import axios from "axios";
+import { setUserInfo, setNewUser } from "@/store/slices/authSlice";
 const OnBoarding = () => {
   const { userInfo, newUser } = useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const [defaultAvatar, setDefaultAvatar] = useState(
     userInfo?.profilePicture || "/default_avatar.png"
   );
+  useEffect(() => {
+    if (!newUser && !userInfo?.email) {
+      router.push("/login");
+    } else if (!newUser && userInfo?.email) {
+      router.push("/");
+    }
+  }, [newUser, userInfo, router]);
 
-  // if (!newUser) {
-  //   router.push("/login");
-  // }
   const { register, handleSubmit, setValue } = useForm();
 
   const handleProfilePicChange = (e) => {
@@ -32,10 +39,38 @@ const OnBoarding = () => {
     }
   };
 
-  const onSubmit = (data) => {
-    const file = data.profilePhoto;
-    if (file.name) {
-      console.log("file has it")
+  const onSubmit = async (formData) => {
+    const email = userInfo?.email;
+    const { name, about } = formData;
+    try {
+      setIsLoading(true);
+      const { data } = await axios.post(CREATE_USER_ROUTE, {
+        email,
+        name,
+        about,
+        profilePicture: defaultAvatar,
+      });
+      if (data?.status) {
+        dispatch(setNewUser(false));
+        dispatch(
+          setUserInfo({
+            id: data.data.id,
+            email: userInfo.email,
+            name,
+            about,
+            profilePicture: defaultAvatar,
+          })
+        );
+        setIsLoading(false);
+        router.push("/");
+      } else {
+        setIsLoading(false);
+        router.push("/login");
+        throw new Error("Error creating user");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
     }
   };
   return (
@@ -59,7 +94,7 @@ const OnBoarding = () => {
               label="About"
               name="about"
               register={register}
-              defaultValue={userInfo?.email}
+              defaultValue={""}
             />
             <Input
               name="profilePhoto"
@@ -71,7 +106,15 @@ const OnBoarding = () => {
                 handleProfilePicChange(e);
               }}
             />
-            <button type="submit">OK</button>
+            <div className="flex items-center justify-center">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex items-center justify-center bg-search-input-container-background px-5 py-2 rounded-md"
+              >
+                {isLoading ? "Creating..." : "Create Profile"}
+              </button>
+            </div>
           </form>
         </div>
         <div>

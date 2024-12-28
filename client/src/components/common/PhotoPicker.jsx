@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 const PhotoPicker = () => {
   const { register } = useForm();
   const component = (
-    <input type="file" {...register("profilePhoto")} hidden id="photo-picker" />
+    <input type="file" {...register("profilePhoto2")} hidden id="photo-picker2" />
   );
   return ReactDOM.createPortal(
     component,

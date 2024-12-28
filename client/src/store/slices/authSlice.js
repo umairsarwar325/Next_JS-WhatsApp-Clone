@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
   name: "auth",
-  initialState: { userInfo: {
-    name:"Test"
-  }, newUser: false },
+  initialState: {
+    userInfo: null,
+    newUser: false,
+    contactsPage: false,
+  },
   reducers: {
     setUserInfo: (state, action) => {
       state.userInfo = action.payload;
@@ -14,6 +16,9 @@ const authSlice = createSlice({
     clearUser: (state) => {
       state.userInfo = null;
       state.newUser = false;
+    },
+    setAllContactsPage: (state) => {
+      state.contactsPage = !state.contactsPage;
     },
   },
 });
