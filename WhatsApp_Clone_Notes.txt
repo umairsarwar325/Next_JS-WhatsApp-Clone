@@ -79,7 +79,7 @@
     
 9. Created take photo, choose from library & upload photo features (avatar.js, onboarding/page.jsx)  
 
-10. built create-user api (server/controllers/AuthController.js)  
+10. built "create-user" api (server/controllers/AuthController.js)  
 
 11. on route changes checking in client app if user is still loggged in using firebase auth:
        onAuthStateChanged(firebaseAuth, async (currentUser) => {
@@ -110,6 +110,27 @@
           }
         });
 
+12. built "get-contacts" api (server/controllers/AuthController.js) and implemented in client (components/Chatlist/ContactList.jsx)
+    -> Api: merged all the contacts in groups having same intial lettter.
+    -> Client: on page load fetched all contact groups in the form of an object and mapped that object to render all contacts.
+        Object.entries(allContacts).map(([intialLetter, userList]) => {
+          return (
+            <div key={Date.now() + intialLetter}>
+              ... other_stuff(see components/Chatlist/ContactList.jsx)
+            </div>
+          );
+        })
+
+12. sockets
+    -> server/index.js
+      - make a global map to maintain sockets and users. Will maintain online and offline status of the users
+      global.onlineUsers = new Map();
+    -> server/controllers/MessageController.js
+      - controller for addMessage
+       const getUser = onlineUsers.get(to); // checks if sender is online
+    -> Chat/MessageBar.jsx in client
+      - send message using ADD_MESSAGE Api
+      
 
 
 

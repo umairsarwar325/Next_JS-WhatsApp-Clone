@@ -67,6 +67,11 @@ const Avatar = ({ type, image, setImage }) => {
             <Image src={image} alt="avatar" fill />
           </div>
         )}
+        {type === "md" && (
+          <div className=" h-16 w-16 relative">
+            <Image src={image} alt="avatar" fill />
+          </div>
+        )}
         {type === "lg" && (
           <div className="h-24 w-24 relative">
             <Image src={image} alt="avatar" fill />

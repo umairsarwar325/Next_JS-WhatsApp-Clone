@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import Chat from "./Chat/Chat";
 
 function Main() {
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo, currentChatUser } = useSelector((state) => state.auth);
   const [redirectLogin, setRedirectLogin] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -27,34 +27,39 @@ function Main() {
       setRedirectLogin(true);
     }
     if (!userInfo && currentUser?.email) {
-      const { data } = await axios.post(CHECK_USER_ROUTE, {
-        email: currentUser?.email,
-      });
-      if (data.status && data.data) {
-        const { id, email, name, about, profilePicture } = data.data;
-        dispatch(setNewUser(false));
-        dispatch(
-          setUserInfo({
-            id,
-            email,
-            name,
-            about,
-            profilePicture,
-          })
-        );
-      } else {
-        dispatch(setUserInfo(null));
-        dispatch(setNewUser(false));
+      try {
+        const { data } = await axios.post(CHECK_USER_ROUTE, {
+          email: currentUser?.email,
+        });
+        if (data.status && data.data) {
+          const { id, email, name, about, profilePicture } = data.data;
+          dispatch(setNewUser(false));
+          dispatch(
+            setUserInfo({
+              id,
+              email,
+              name,
+              about,
+              profilePicture,
+            })
+          );
+        } else {
+          dispatch(setUserInfo(null));
+          dispatch(setNewUser(false));
+          router.push("/login");
+        }
+      } catch (error) {
         router.push("/login");
+        console.log(error);
       }
     }
   });
   return (
     <>
       <div className="grid grid-cols-main h-screen w-full max-h-screen max-w-full overflow-hidden">
-        <ChatList />
-        {/* <Empty /> */}
-        <Chat />
+        <ChatList /> 
+        {currentChatUser ? <Chat /> : <Empty />}
+        
       </div>
     </>
   );

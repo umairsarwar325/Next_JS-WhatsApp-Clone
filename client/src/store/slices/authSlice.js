@@ -5,6 +5,7 @@ const authSlice = createSlice({
     userInfo: null,
     newUser: false,
     contactsPage: false,
+    currentChatUser: null,
   },
   reducers: {
     setUserInfo: (state, action) => {
@@ -20,7 +21,16 @@ const authSlice = createSlice({
     setAllContactsPage: (state) => {
       state.contactsPage = !state.contactsPage;
     },
+    setCurrentChatUser: (state, action) => {
+      state.currentChatUser = action.payload;
+    },
   },
 });
-export const { setUserInfo, setNewUser, clearUser } = authSlice.actions;
+export const {
+  setUserInfo,
+  setNewUser,
+  clearUser,
+  setAllContactsPage,
+  setCurrentChatUser,
+} = authSlice.actions;
 export default authSlice.reducer;
