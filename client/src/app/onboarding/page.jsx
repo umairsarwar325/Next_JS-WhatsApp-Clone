@@ -8,7 +8,7 @@ import Avatar from "@/components/common/Avatar";
 import Input from "@/components/common/Input";
 import { CREATE_USER_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
-import { setUserInfo, setNewUser } from "@/store/slices/authSlice";
+import { setUserInfo, setNewUser } from "@/store/slices/globalSlice";
 const OnBoarding = () => {
   const { userInfo, newUser } = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(false);

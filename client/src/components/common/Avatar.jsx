@@ -63,7 +63,7 @@ const Avatar = ({ type, image, setImage }) => {
     <>
       <div className="flex items-center justify-center rounded-full overflow-hidden">
         {type === "sm" && (
-          <div className=" h-10 w-10 relative">
+          <div className="h-10 w-10 relative">
             <Image src={image} alt="avatar" fill />
           </div>
         )}

@@ -2,7 +2,7 @@ import React from "react";
 import Avatar from "../common/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { BsFillChatLeftTextFill, BsThreeDotsVertical } from "react-icons/bs";
-import { setAllContactsPage } from "@/store/slices/authSlice";
+import { setAllContactsPage } from "@/store/slices/globalSlice";
 
 function ChatListHeader() {
   const { userInfo } = useSelector((state) => state.auth);

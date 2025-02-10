@@ -123,16 +123,120 @@
 
 12. sockets
     -> server/index.js
-      - make a global map to maintain sockets and users. Will maintain online and offline status of the users
-      global.onlineUsers = new Map();
-    -> server/controllers/MessageController.js
-      - controller for addMessage
-       const getUser = onlineUsers.get(to); // checks if sender is online
-    -> Chat/MessageBar.jsx in client
-      - send message using ADD_MESSAGE Api
+      - make a socket connection
+
+      import { Server } from "socket.io";
+
+      const server = app.listen(process.env.PORT, () => {
+        console.log("server started on port:", process.env.PORT); //PORT = 3005
+      });
+
+      const io = new Server(server, {
+        cors: {
+          origin: "http://localhost:3000", // client's URL
+        },
+      });  // Establlishing the socket
+
+      global.onlineUsers = new Map(); // a global map to maintain sockets and users. Will maintain online and offline status of the users. no reptative values
       
+      io.on("connection", (socket) => {
+        // event "io.on" runs on new connection request
+        global.chatSocket = socket; // set the socket in global chatSocket
+        socket.on("add-user", (userId) => {
+          // event "socket.on" runs on add-user event gets the userId(passed from frontend) and sets that userId and socket id inside onlineUsers
+          onlineUsers.set(userId, socket.id);
+        });
+        socket.on("send-msg", (data) => {
+          const sendUserSocket = onlineUsers.get(data.to);
+          if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("msg-received", {
+              from: data.from,
+              to: data.to,
+              message: data.message,
+            });
+          }
+        });
+      });
 
+    -> server/controllers/MessageController.js
+      - controller for addMessage and getMessages
+       const getUser = onlineUsers.get(to); // checks if sender is online
 
+    -> in client
+      - components/Main.jsx
+
+        import { io } from "socket.io-client";
+
+        const socket = useRef();
+
+        useEffect(() => {
+          if (userInfo) {
+            socket.current = io(HOST); // "http://localhost:3005"
+            socket.current.emit("add-user", userInfo.id); // emiting add-user event that is created in backend
+            dispatch(setSocket(socket.current)); // set the global socket to emit other events (send message , etc)
+          }
+        }, [userInfo]);
+
+         useEffect(() => {
+          if (socket.current) {
+            socket.current.on("msg-received", (data) => {
+              // event "socket.on" runs when new message is recieved
+              dispatch(addMessage({ ...data.message })); // adding new message to messages(global store state)
+            });
+            setSocketEvent(true);
+          }
+        }, [socket.current]);
+      - send message using ADD_MESSAGE Api (Chat/MessageBar.jsx)
+         
+         const sendMessageHandler = async () => {
+          try {
+            setIsLoading(true);
+            const { data } = await axios.post(ADD_MESSAGE, {
+              to: currentChatUser?.id,
+              from: userInfo?.id,
+              message,
+            });
+            socket.emit("send-msg", {
+              to: currentChatUser?.id,
+              from: userInfo?.id,
+              message: data?.message,
+            }); // emiting send-msg event, we must add this event in server/index.js
+            setMessage("");
+            setIsLoading(false);
+          } catch (error) {
+            setIsLoading(false);
+            console.log(error);
+          }
+        };
+      - get and show messages using GET_MESSAGE Api (components/Main.jsx and ChatCntainer.jsx)
+      
+13. EmojiPicker (in MessageBar.jsx)    
+
+14. Image Upload 
+    - client (MessageBar.jsx -> handlePicChange)    
+    - server 
+        - app.use("/uploads/images", express.static("uploads/images")); // to serve images to client from ("uploads/images") whenever this route hits
+        - a new route to store images (/add-image-message)    
+        - used multer diskStorage    
+
+15. Audio Messages 
+    - client 
+      - (components/common/CaptureAudio.jsx) used wavesurfer.js to show wave forms   
+      - import this component in MessageBar.jsx dynamically
+          import dynamic from "next/dynamic";
+          const CaptureAudio = dynamic(() => import("../common/CaptureAudio"), {
+            ssr: false,
+          });
+    - server 
+        - app.use("/uploads/recordings", express.static("uploads/recordings")); // to serve recordings to client from ("uploads/images") whenever this route hits
+        - a new route to store recordings (/add-audio-message)    
+        - used multer diskStorage    
+
+16. Messages Search
+    - client 
+      - (components/Chat/SearchMessage.jsx)   
+      - (components/ChatList/List.jsx)
+      - (components/ChatList/ContactList.jsx)
 
 
 

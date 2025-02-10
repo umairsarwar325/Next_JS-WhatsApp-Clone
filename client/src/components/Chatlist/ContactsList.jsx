@@ -2,14 +2,16 @@ import { GET_CONTACTS } from "@/utils/ApiRoutes";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
-import { setAllContactsPage } from "@/store/slices/authSlice";
+import { setAllContactsPage } from "@/store/slices/globalSlice";
 import { useDispatch } from "react-redux";
 import ChatLIstItem from "./ChatLIstItem";
 
 function ContactsList() {
   const [allContacts, setAllContacts] = useState({});
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState("");
+  const [searchedContacts, setSearchedContacts] = useState({});
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -18,6 +20,7 @@ function ContactsList() {
         const { data } = await axios.get(GET_CONTACTS);
         if (data?.status) {
           setAllContacts(data.userGroup);
+          setSearchedContacts(data.userGroup);
         }
         setIsLoading(false);
       } catch (error) {
@@ -27,6 +30,21 @@ function ContactsList() {
     };
     fetchContacts();
   }, []);
+
+  useEffect(() => {
+    if (searchedTerm.length) {
+      const filteredData = {};
+      Object.keys(allContacts).forEach(
+        (key) =>
+          (filteredData[key] = allContacts[key].filter((obj) =>
+            obj.name.toLowerCase().includes(searchedTerm.toLowerCase())
+          ))
+      );
+      setSearchedContacts(filteredData);
+    } else {
+      setSearchedContacts(allContacts);
+    }
+  }, [searchedTerm]);
 
   return (
     <div className="h-full w-full flex flex-col">
@@ -57,6 +75,10 @@ function ContactsList() {
           </div>
           <div className="w-full">
             <input
+              value={searchedTerm}
+              onChange={(e) => {
+                setSearchedTerm(e.target.value);
+              }}
               type="text"
               placeholder="Search contacts"
               className="bg-transparent text-sm focus:outline-none text-white w-full"
@@ -66,20 +88,22 @@ function ContactsList() {
       </div>
       <div className="bg-search-input-container-background flex flex-col justify-start items-start py-3 px-2 gap-3 h-full custom-scrollbar w-full">
         {isLoading && <p className="text-white">Loading Contacts...</p>}
-        {Object.entries(allContacts).map(([intialLetter, userList]) => {
+        {Object.entries(searchedContacts).map(([intialLetter, userList]) => {
           return (
-            <div key={Date.now() + intialLetter} className="py-2 pl-6 w-full">
-              <div className="text-teal-light text-base">{intialLetter}</div>
-              {userList.map((contact) => {
-                return (
-                  <ChatLIstItem
-                    data={contact}
-                    isContactPage={true}
-                    key={contact.id}
-                  />
-                );
-              })}
-            </div>
+            userList?.length > 0 && (
+              <div key={Date.now() + intialLetter} className="py-2 pl-6 w-full">
+                <div className="text-teal-light text-base">{intialLetter}</div>
+                {userList.map((contact) => {
+                  return (
+                    <ChatLIstItem
+                      data={contact}
+                      isContactPage={true}
+                      key={contact.id}
+                    />
+                  );
+                })}
+              </div>
+            )
           );
         })}
       </div>

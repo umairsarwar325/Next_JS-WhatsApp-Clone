@@ -8,7 +8,7 @@ import axios from "axios";
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserInfo, setNewUser } from "@/store/slices/authSlice";
+import { setUserInfo, setNewUser } from "@/store/slices/globalSlice";
 
 function Login() {
   const router = useRouter();
