@@ -17,6 +17,10 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    NEXT_PUBLIC_ZEGO_APP_ID: 256258028,
+    NEXT_PUBLIC_ZEGO_SEVER_ID: "8eb121f31739ef8163f2749809d60a58",
+  },
 };
 
 export default nextConfig;

@@ -6,11 +6,37 @@ import { IoVideocam } from "react-icons/io5";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessageSearch } from "@/store/slices/globalSlice";
+import {
+  setMessageSearch,
+  setVideoCall,
+  setVoiceCall,
+} from "@/store/slices/globalSlice";
 
 function ChatHeader() {
-  const { currentChatUser } = useSelector((state) => state.auth);
+  const { currentChatUser, socket } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+  const handleVoiceCall = () => {
+    dispatch(
+      setVoiceCall({
+        ...currentChatUser,
+        type: "outgoing",
+        callType: "voice",
+        roomId: Date.now(),
+      })
+    );
+  };
+  const handleVideoCall = () => {
+    dispatch(
+      setVideoCall({
+        ...currentChatUser,
+        type: "outgoing",
+        callType: "video",
+        roomId: Date.now(),
+      })
+    );
+  };
+
   return (
     <div className="w-full h-16 py-3 px-4 flex justify-between items-center bg-panel-header-background z-10">
       <div className="flex items-center justify-center gap-6">
@@ -23,11 +49,13 @@ function ChatHeader() {
       <div className="flex items-center gap-6">
         <MdCall
           className="text-panel-header-icon cursor-pointer text-xl"
-          title="Call"
+          title="Voice Call"
+          onClick={handleVoiceCall}
         />
         <IoVideocam
           className="text-panel-header-icon cursor-pointer text-xl"
-          title="Video"
+          title="Video Call"
+          onClick={handleVideoCall}
         />
         <BiSearchAlt2
           className="text-panel-header-icon cursor-pointer text-xl"

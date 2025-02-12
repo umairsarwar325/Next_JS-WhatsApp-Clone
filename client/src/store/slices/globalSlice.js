@@ -13,7 +13,10 @@ const globalSlice = createSlice({
     onlineUsers: [],
     filteredContacts: [],
     // Voice And Video Call states
-    
+    videoCall: undefined,
+    voiceCall: undefined,
+    incomingVideoCall: undefined,
+    incomingVoiceCall: undefined,
   },
   reducers: {
     setUserInfo: (state, action) => {
@@ -56,6 +59,26 @@ const globalSlice = createSlice({
         contact.name.toLowerCase().includes(action.payload.toLowerCase())
       );
     },
+
+    // Actions for Voice and vidoe call
+    setVoiceCall: (state, action) => {
+      state.voiceCall = action.payload;
+    },
+    setVideoCall: (state, action) => {
+      state.videoCall = action.payload;
+    },
+    setIncomingVoiceCall: (state, action) => {
+      state.incomingVoiceCall = action.payload;
+    },
+    setIncomingVideoCall: (state, action) => {
+      state.incomingVideoCall = action.payload;
+    },
+    endCall: (state) => {
+      state.voiceCall = undefined;
+      state.videoCall = undefined;
+      state.incomingVoiceCall = undefined;
+      state.incomingVideoCall = undefined;
+    },
   },
 });
 export const {
@@ -71,5 +94,11 @@ export const {
   setUserContacts,
   setOnlineUsers,
   setSearchedContacts,
+  // For vidoe call
+  setVoiceCall,
+  setVideoCall,
+  setIncomingVoiceCall,
+  setIncomingVideoCall,
+  endCall,
 } = globalSlice.actions;
 export default globalSlice.reducer;

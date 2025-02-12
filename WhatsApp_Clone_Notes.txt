@@ -238,6 +238,12 @@
       - (components/ChatList/List.jsx)
       - (components/ChatList/ContactList.jsx)
 
+17. Video and Audio Calls
+    - sockets: integrated sockets for video and audio calls
+    - zego_cloud: created a project in zegocloud dashboard and integrated in server and client
+        (inside authCntorller a new Controller to genrate the token)
+        (inside components/Call/Container.jsx setup for zegocloud video and audio call)
+
 
 
 

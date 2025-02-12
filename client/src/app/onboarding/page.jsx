@@ -9,6 +9,7 @@ import Input from "@/components/common/Input";
 import { CREATE_USER_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
 import { setUserInfo, setNewUser } from "@/store/slices/globalSlice";
+import { BiLoaderCircle } from "react-icons/bi";
 const OnBoarding = () => {
   const { userInfo, newUser } = useSelector((state) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,10 +41,10 @@ const OnBoarding = () => {
   };
 
   const onSubmit = async (formData) => {
+    setIsLoading(true);
     const email = userInfo?.email;
     const { name, about } = formData;
     try {
-      setIsLoading(true);
       const { data } = await axios.post(CREATE_USER_ROUTE, {
         email,
         name,
@@ -112,7 +113,14 @@ const OnBoarding = () => {
                 disabled={isLoading}
                 className="flex items-center justify-center bg-search-input-container-background px-5 py-2 rounded-md"
               >
-                {isLoading ? "Creating..." : "Create Profile"}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <span>Creating</span>
+                    <BiLoaderCircle className="text-panel-header-icon animate-spin text-xl" />
+                  </div>
+                ) : (
+                  "Create Profile"
+                )}
               </button>
             </div>
           </form>

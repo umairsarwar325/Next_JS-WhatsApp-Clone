@@ -6,6 +6,7 @@ const MESSAGES_ROUTE = `${HOST}/api/messages`;
 const CHECK_USER_ROUTE = `${AUTH_ROUTE}/check-user`;
 const CREATE_USER_ROUTE = `${AUTH_ROUTE}/create-user`;
 const GET_CONTACTS = `${AUTH_ROUTE}/get-contacts`;
+const GET_CALL_TOKEN = `${AUTH_ROUTE}/generate-token`;
 
 const ADD_MESSAGE = `${MESSAGES_ROUTE}/add-message`;
 const ADD_IMAGE_MESSAGE = `${MESSAGES_ROUTE}/add-image-message`;
@@ -23,4 +24,5 @@ export {
   GET_MESSAGES,
   ADD_AUDIO_MESSAGE,
   GET_INITIAL_CONTACTS,
+  GET_CALL_TOKEN,
 };

@@ -1,5 +1,5 @@
 import getPrismaInstance from "../utils/PrismaClient.js";
-
+import { generateToken04 } from "../utils/TokenGenerator.js";
 const checkUser = async (req, res) => {
   try {
     const { email } = req.body;
@@ -124,5 +124,53 @@ const getAllUsers = async (req, res, next) => {
     });
   }
 };
+const generateToken = async (req, res, next) => {
+  try {
+    const appId = parseInt(process.env.ZEGO_APP_ID);
+    const serverSecret = process.env.ZEGO_SEVER_ID;
+    const { userId } = req.params;
+    const effectiveTime = 3600; // Token validity time in seconds
+    const payload = ""; // Optional payload
 
-export { checkUser, createUser, getAllUsers };
+    // Validate required inputs
+    if (!appId || !serverSecret || !userId) {
+      return res.status(400).json({
+        status: false,
+        message: "Missing data for token generation (appId, serverSecret, or userId).",
+      });
+    }
+
+    // Generate the token
+    const token = generateToken04(
+      appId,
+      userId,
+      serverSecret,
+      effectiveTime,
+      payload
+    );
+
+    // Return the token
+    return res.status(200).json({
+      status: true,
+      token,
+    });
+  } catch (error) {
+    console.error("Error generating token:", error);
+
+    // Handle specific errors thrown by generateToken04
+    if (error.errorCode) {
+      return res.status(400).json({
+        status: false,
+        message: error.errorMessage || "Invalid input for token generation.",
+      });
+    }
+
+    // Handle generic errors
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export { checkUser, createUser, getAllUsers, generateToken };

@@ -10,6 +10,9 @@ import {
   setMessages,
   setSocket,
   addMessage,
+  setIncomingVoiceCall,
+  setIncomingVideoCall,
+  endCall,
 } from "@/store/slices/globalSlice";
 import axios from "axios";
 import { CHECK_USER_ROUTE, GET_MESSAGES, HOST } from "@/utils/ApiRoutes";
@@ -17,11 +20,21 @@ import { useRouter } from "next/navigation";
 import Chat from "./Chat/Chat";
 import { io } from "socket.io-client";
 import SearchMessages from "./Chat/SearchMessages";
+import VideoCall from "./Call/VideoCall";
+import VoiceCall from "./Call/VoiceCall";
+import IncomingVideoCall from "./common/IncomingVideoCall";
+import IncomingCall from "./common/IncomingCall";
 
 function Main() {
-  const { userInfo, currentChatUser, messageSearch } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    userInfo,
+    currentChatUser,
+    messageSearch,
+    videoCall,
+    voiceCall,
+    incomingVideoCall,
+    incomingVoiceCall,
+  } = useSelector((state) => state.auth);
   const [redirectLogin, setRedirectLogin] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -76,11 +89,33 @@ function Main() {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-received", (data) => {
-        console.log("recieved msg: ", data);
         // event "socket.on" runs when new message is recieved
         dispatch(addMessage({ ...data.message })); // adding new message to messages(global store state)
       });
-      console.log("HAILLLL: socket event has been set");
+      socket.current.on("incoming-voice-call", ({ from, roomId, callType }) => {
+        dispatch(
+          setIncomingVoiceCall({
+            ...from,
+            roomId,
+            callType,
+          })
+        );
+      });
+      socket.current.on("incoming-video-call", ({ from, roomId, callType }) => {
+        dispatch(
+          setIncomingVideoCall({
+            ...from,
+            roomId,
+            callType,
+          })
+        );
+      });
+      socket.current.on("voice-call-rejected", () => {
+        dispatch(endCall());
+      });
+      socket.current.on("video-call-rejected", () => {
+        dispatch(endCall());
+      });
     }
   }, [socket.current]);
 
@@ -101,6 +136,18 @@ function Main() {
   }, [currentChatUser]);
   return (
     <>
+      {incomingVideoCall && <IncomingVideoCall />}
+      {incomingVoiceCall && <IncomingCall />}
+      {videoCall && (
+        <div className="h-screen w-screen max-h-full overflow-hidden absolute top-0 left-0 z-50">
+          <VideoCall />
+        </div>
+      )}
+      {voiceCall && (
+        <div className="h-screen w-screen max-h-full overflow-hidden absolute top-0 left-0 z-50">
+          <VoiceCall />
+        </div>
+      )}
       <div className="grid grid-cols-main h-screen w-full max-h-screen max-w-full overflow-hidden">
         <ChatList />
         {currentChatUser ? (
