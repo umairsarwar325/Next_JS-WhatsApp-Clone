@@ -47,7 +47,7 @@ function Container({ data }) {
       try {
         const { ZegoExpressEngine } = await import("zego-express-engine-webrtc");
         const zg = new ZegoExpressEngine(
-          process.env.NEXT_PUBLIC_ZEGO_APP_ID,
+          parseInt(process.env.NEXT_PUBLIC_ZEGO_APP_ID),
           process.env.NEXT_PUBLIC_ZEGO_SEVER_ID
         );
         setZgVar(zg);

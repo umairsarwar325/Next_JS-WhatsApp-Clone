@@ -1,7 +1,7 @@
 import { GET_CONTACTS } from "@/utils/ApiRoutes";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
+import { BiArrowBack, BiLoaderCircle, BiSearchAlt2 } from "react-icons/bi";
 import { setAllContactsPage } from "@/store/slices/globalSlice";
 import { useDispatch } from "react-redux";
 import ChatLIstItem from "./ChatLIstItem";
@@ -87,7 +87,11 @@ function ContactsList() {
         </div>
       </div>
       <div className="bg-search-input-container-background flex flex-col justify-start items-start py-3 px-2 gap-3 h-full custom-scrollbar w-full">
-        {isLoading && <p className="text-white">Loading Contacts...</p>}
+        {isLoading && (
+          <div className="w-full flex items-center justify-center mt-3">
+            <BiLoaderCircle className="text-panel-header-icon cursor-pointer text-3xl animate-spin" />
+          </div>
+        )}
         {Object.entries(searchedContacts).map(([intialLetter, userList]) => {
           return (
             userList?.length > 0 && (

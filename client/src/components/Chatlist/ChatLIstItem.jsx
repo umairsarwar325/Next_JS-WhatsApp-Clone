@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentChatUser,
   setAllContactsPage,
+  resetUnreadMessages,
 } from "@/store/slices/globalSlice";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
@@ -20,6 +21,11 @@ function ChatLIstItem({ data, isContactPage = false }) {
           ...data,
           id: userInfo.id === data.senderId ? data.receiverId : data.senderId,
         })
+      );
+      dispatch(
+        resetUnreadMessages(
+          userInfo.id === data.senderId ? data.receiverId : data.senderId
+        )
       );
     } else {
       dispatch(setCurrentChatUser(data));

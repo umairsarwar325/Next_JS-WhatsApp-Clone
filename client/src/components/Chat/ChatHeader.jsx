@@ -25,7 +25,7 @@ function ChatHeader() {
 
   const contextMenuOptions = [
     {
-      name: "Exit Chat",
+      name: "exit chat",
       callback: () => {
         dispatch(setExitChat());
       },
@@ -57,52 +57,56 @@ function ChatHeader() {
   };
 
   return (
-    <div className="w-full h-16 py-3 px-4 flex justify-between items-center bg-panel-header-background z-10">
-      <div className="flex items-center justify-center gap-6">
-        <Avatar type={"sm"} image={currentChatUser?.profilePicture} />
-        <div className="flex flex-col">
-          <span className="text-primary-strong">{currentChatUser?.name}</span>
-          <span className="text-secondary text-sm">
-            {onlineUsers?.includes(currentChatUser?.id) ? "online" : "offline"}
-          </span>
+    <>
+      <div className="w-full h-16 py-3 px-4 flex justify-between items-center bg-panel-header-background z-10">
+        <div className="flex items-center justify-center gap-6">
+          <Avatar type={"sm"} image={currentChatUser?.profilePicture} />
+          <div className="flex flex-col">
+            <span className="text-primary-strong">{currentChatUser?.name}</span>
+            <span className="text-secondary text-sm">
+              {onlineUsers?.includes(currentChatUser?.id)
+                ? "online"
+                : "offline"}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-6">
+          <MdCall
+            className="text-panel-header-icon cursor-pointer text-xl"
+            title="Voice Call"
+            onClick={handleVoiceCall}
+          />
+          <IoVideocam
+            className="text-panel-header-icon cursor-pointer text-xl"
+            title="Video Call"
+            onClick={handleVideoCall}
+          />
+          <BiSearchAlt2
+            className="text-panel-header-icon cursor-pointer text-xl"
+            title="Search"
+            onClick={() => {
+              dispatch(setMessageSearch());
+            }}
+          />
+          <BsThreeDotsVertical
+            className="text-panel-header-icon cursor-pointer text-xl"
+            title="Menu"
+            id="context-opener"
+            onClick={(e) => {
+              showConextMenu(e);
+            }}
+          />
         </div>
       </div>
-      <div className="flex items-center gap-6">
-        <MdCall
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Voice Call"
-          onClick={handleVoiceCall}
+      {isContextMenuVisible && (
+        <ContextMenu
+          options={contextMenuOptions}
+          coordinates={contextMenuCoodinates}
+          contextMenu={isContextMenuVisible}
+          setContextMenu={setIsContextMenuVisible}
         />
-        <IoVideocam
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Video Call"
-          onClick={handleVideoCall}
-        />
-        <BiSearchAlt2
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Search"
-          onClick={() => {
-            dispatch(setMessageSearch());
-          }}
-        />
-        <BsThreeDotsVertical
-          className="text-panel-header-icon cursor-pointer text-xl"
-          title="Menu"
-          id="context-opener"
-          onClick={(e) => {
-            showConextMenu(e);
-          }}
-        />
-        {isContextMenuVisible && (
-          <ContextMenu
-            options={contextMenuOptions}
-            coordinates={contextMenuCoodinates}
-            contextMenu={isContextMenuVisible}
-            setContextMenu={setIsContextMenuVisible}
-          />
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

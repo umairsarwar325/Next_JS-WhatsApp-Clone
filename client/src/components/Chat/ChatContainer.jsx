@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { calculateTime } from "@/utils/CalculateTime";
 import MessageStatus from "../common/MessageStatus";
 import ImageMessage from "./ImageMessage";
 import dynamic from "next/dynamic";
+
 const VoiceMessage = dynamic(() => import("./VoiceMessage"), {
   ssr: false,
 });
@@ -12,13 +13,24 @@ function ChatContainer() {
   const { userInfo, currentChatUser, messages } = useSelector(
     (state) => state.auth
   );
+
+  const messagesEndRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (messagesEndRef.current) {
+  //     messagesEndRef.current.scrollIntoView();
+  //   }
+  // }, [messages]);
+
   return (
-    <div className="h-[80vh] w-full relative flex-grow overflow-auto custom-scrollbar">
+    <div className="h-[80vh] w-full relative overflow-auto custom-scrollbar">
       <div className="bg-chat-background w-full h-full bg-fixed opacity-5 fixed left-0 top-0 z-0" />
       <div className="flex w-full">
         <div className="mx-4 my-6 relative bottom-0 left-0 z-40 w-full h-full">
-          <div className="flex flex-col justify-end w-full h-full gap-1 overflow-y-scroll">
-            {messages?.map((message, index) => (
+          <div
+            className="flex flex-col justify-end w-full h-full gap-1 overflow-y-scroll"
+          >
+            {messages?.map((message) => (
               <div
                 key={message.id}
                 className={` flex w-full ${
@@ -54,6 +66,7 @@ function ChatContainer() {
                 {message.type === "audio" && <VoiceMessage message={message} />}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
         </div>
       </div>

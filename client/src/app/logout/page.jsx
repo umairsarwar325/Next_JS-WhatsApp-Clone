@@ -1,3 +1,4 @@
+"use client";
 import { setUserInfo } from "@/store/slices/globalSlice";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { signOut } from "firebase/auth";

@@ -14,6 +14,7 @@ import {
   setIncomingVideoCall,
   endCall,
   setOnlineUsers,
+  addUserContacts,
 } from "@/store/slices/globalSlice";
 import axios from "axios";
 import { CHECK_USER_ROUTE, GET_MESSAGES, HOST } from "@/utils/ApiRoutes";
@@ -95,6 +96,7 @@ function Main() {
       socket.current.on("msg-received", (data) => {
         // event "socket.on" runs when new message is recieved
         dispatch(addMessage({ ...data.message })); // adding new message to messages(global store state)
+        dispatch(addUserContacts(data.message));
       });
       socket.current.on("incoming-voice-call", ({ from, roomId, callType }) => {
         dispatch(

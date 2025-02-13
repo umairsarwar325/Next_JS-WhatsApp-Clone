@@ -42,7 +42,6 @@ const globalSlice = createSlice({
       state.messages = action.payload;
     },
     addMessage: (state, action) => {
-      console.log("ACTION>PAYLOAD: ", action.payload);
       state.messages = [...state.messages, action.payload];
     },
     setSocket: (state, action) => {
@@ -53,6 +52,51 @@ const globalSlice = createSlice({
     },
     setUserContacts: (state, action) => {
       state.userContacts = action.payload;
+    },
+    addUserContacts: (state, action) => {
+      const contacts = state.userContacts;
+      const {
+        id,
+        type,
+        message,
+        messageStatus,
+        createdAt,
+        senderId,
+        receiverId,
+      } = action.payload;
+      const index = contacts.findIndex(
+        (contact) => contact.id === action.payload.sender.id
+      );
+      let foundObj = undefined;
+      if (index != -1) {
+        foundObj = contacts.splice(index, 1);
+      }
+      contacts.unshift({
+        messageId: id,
+        type,
+        message,
+        messageStatus,
+        createdAt,
+        senderId,
+        receiverId,
+        ...action.payload.sender,
+        totalUnreadMessages: foundObj ? foundObj[0].totalUnreadMessages + 1 : 1,
+      });
+      state.userContacts = contacts;
+    },
+    resetUnreadMessages: (state, action) => {
+      console.log(action.payload)
+      const contacts = state.userContacts.map((contact) => {
+        if (contact.id === action.payload) {
+          return {
+            ...contact,
+            totalUnreadMessages: 0,
+          };
+        } else {
+          return contact;
+        }
+      });
+      state.userContacts = contacts;
     },
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
@@ -96,8 +140,10 @@ export const {
   addMessage,
   setMessageSearch,
   setUserContacts,
+  addUserContacts,
   setOnlineUsers,
   setSearchedContacts,
+  resetUnreadMessages,
   // For vidoe call
   setVoiceCall,
   setVideoCall,

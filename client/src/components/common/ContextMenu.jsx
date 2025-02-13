@@ -35,7 +35,7 @@ const ContextMenu = ({ options, coordinates, contextMenu, setContextMenu }) => {
       <ul>
         {options?.map(({ name, callback }) => (
           <li
-            className="py-2 px-3 cursor-pointer hover:bg-background-default-hover"
+            className="py-2 px-2 cursor-pointer hover:bg-background-default-hover"
             key={name}
             onClick={(e) => {
               handleClick(e, callback);

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "../common/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { BsFillChatLeftTextFill, BsThreeDotsVertical } from "react-icons/bs";
 import { setAllContactsPage } from "@/store/slices/globalSlice";
 import { useRouter } from "next/navigation";
+import ContextMenu from "../common/ContextMenu";
+import { BiLoaderCircle } from "react-icons/bi";
 
 function ChatListHeader() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -37,10 +39,14 @@ function ChatListHeader() {
   return (
     <div className="h-16 px-4 py-3 flex justify-between items-center">
       <div className="cursor-pointer">
-        <Avatar
-          type="sm"
-          image={userInfo?.profilePicture || "/default_avatar.png"}
-        />
+        {!userInfo?.profilePicture ? (
+          <BiLoaderCircle className="text-icon-green cursor-pointer text-3xl animate-spin" />
+        ) : (
+          <Avatar
+            type="sm"
+            image={userInfo?.profilePicture || "/default_avatar.png"}
+          />
+        )}
       </div>
       <div className="flex items-center gap-6">
         <BsFillChatLeftTextFill
