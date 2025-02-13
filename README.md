@@ -8,7 +8,6 @@ This project is a clone of WhatsApp built using Next.js for the frontend and Exp
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -64,11 +63,11 @@ This project is a clone of WhatsApp built using Next.js for the frontend and Exp
     
 4. **Start the development server:**
 
-# Start the client
+- Start the client
 cd client
 npm run dev
 
-# Start the server
+- Start the server
 cd ../server
 npm start
 
