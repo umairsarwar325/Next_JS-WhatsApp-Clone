@@ -3,12 +3,35 @@ import Avatar from "../common/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 import { BsFillChatLeftTextFill, BsThreeDotsVertical } from "react-icons/bs";
 import { setAllContactsPage } from "@/store/slices/globalSlice";
+import { useRouter } from "next/navigation";
 
 function ChatListHeader() {
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const handleAllContactsPage = () => {
     dispatch(setAllContactsPage());
+  };
+
+  const [isContextMenuVisible, setIsContextMenuVisible] = useState(false);
+  const [contextMenuCoodinates, setContextMenuCoodinates] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const contextMenuOptions = [
+    {
+      name: "Logout",
+      callback: () => {
+        setIsContextMenuVisible(false);
+        router.push("/logout");
+      },
+    },
+  ];
+  const showConextMenu = (e) => {
+    setContextMenuCoodinates({ x: e.pageX, y: e.pageY });
+    setIsContextMenuVisible(true);
   };
 
   return (
@@ -28,8 +51,20 @@ function ChatListHeader() {
         <BsThreeDotsVertical
           className="text-panel-header-icon cursor-pointer text-xl"
           title="Menu"
+          id="context-opener"
+          onClick={(e) => {
+            showConextMenu(e);
+          }}
         />
       </div>
+      {isContextMenuVisible && (
+        <ContextMenu
+          options={contextMenuOptions}
+          coordinates={contextMenuCoodinates}
+          contextMenu={isContextMenuVisible}
+          setContextMenu={setIsContextMenuVisible}
+        />
+      )}
     </div>
   );
 }

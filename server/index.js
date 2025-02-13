@@ -32,8 +32,16 @@ io.on("connection", (socket) => {
   global.chatSocket = socket; // set the socket in global chatSocket
   socket.on("add-user", (userId) => {
     // event "socket.on" runs on add-user event gets the userId(passed from frontend) and sets that userId and socket id inside onlineUsers
-    console.log("add-user: ", userId);
     onlineUsers.set(userId, socket.id);
+    socket.broadcast.emit("online-users", {
+      onlineUsers: Array.from(onlineUsers.keys()),
+    });
+  });
+  socket.on("signout", (userId) => {
+    onlineUsers.delete(userId);
+    socket.broadcast.emit("online-users", {
+      onlineUsers: Array.from(onlineUsers.keys()),
+    });
   });
   socket.on("send-msg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);

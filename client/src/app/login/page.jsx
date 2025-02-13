@@ -26,9 +26,9 @@ function Login() {
 
   const handleLogin = async () => {
     setIsLoading(true);
+    try {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(firebaseAuth, provider);
-    try {
       if (user) {
         const { data } = await axios.post(CHECK_USER_ROUTE, {
           email: user.email,

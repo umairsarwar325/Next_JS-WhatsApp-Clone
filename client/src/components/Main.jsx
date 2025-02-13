@@ -13,6 +13,7 @@ import {
   setIncomingVoiceCall,
   setIncomingVideoCall,
   endCall,
+  setOnlineUsers,
 } from "@/store/slices/globalSlice";
 import axios from "axios";
 import { CHECK_USER_ROUTE, GET_MESSAGES, HOST } from "@/utils/ApiRoutes";
@@ -88,6 +89,9 @@ function Main() {
 
   useEffect(() => {
     if (socket.current) {
+      socket.current.on("online-users", (data) => {
+        dispatch(setOnlineUsers(data.onlineUsers));
+      });
       socket.current.on("msg-received", (data) => {
         // event "socket.on" runs when new message is recieved
         dispatch(addMessage({ ...data.message })); // adding new message to messages(global store state)

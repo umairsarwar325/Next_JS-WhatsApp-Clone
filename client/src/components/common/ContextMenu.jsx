@@ -28,7 +28,7 @@ const ContextMenu = ({ options, coordinates, contextMenu, setContextMenu }) => {
   };
   return (
     <div
-      className={`bg-dropdown-background fixed z-[100] shadow-xl rounded-lg h-28 overflow-x-hidden overflow-y-scroll`}
+      className={`bg-dropdown-background fixed z-[100] shadow-xl rounded-lg max-h-28 overflow-x-hidden overflow-y-scroll`}
       ref={contextMenuRef}
       style={{ top: coordinates.y, left: coordinates.x }}
     >

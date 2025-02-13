@@ -35,6 +35,9 @@ const globalSlice = createSlice({
     setCurrentChatUser: (state, action) => {
       state.currentChatUser = action.payload;
     },
+    setExitChat: (state, action) => {
+      state.currentChatUser = undefined;
+    },
     setMessages: (state, action) => {
       state.messages = action.payload;
     },
@@ -87,6 +90,7 @@ export const {
   clearUser,
   setAllContactsPage,
   setCurrentChatUser,
+  setExitChat,
   setMessages,
   setSocket,
   addMessage,
