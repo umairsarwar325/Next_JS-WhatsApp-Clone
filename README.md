@@ -1,6 +1,6 @@
 # Next.js WhatsApp Clone with Notes
 
-This project is a clone of WhatsApp built using Next.js for the frontend and Express.js for the server.
+This project is a clone of WhatsApp built using Next.js for the frontend, Express.js for the server and Prisma with MongoDB for database.
 
 ## Table of Contents
 
