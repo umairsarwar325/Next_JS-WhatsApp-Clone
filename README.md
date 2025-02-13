@@ -11,6 +11,7 @@ This project is a clone of WhatsApp built using Next.js for the frontend and Exp
 
 ## Features
 
+- Comprehensive notes made during developement phases covering related work in each phase
 - Real-time messaging using WebSockets
 - User authentication and authorization using Google
 - Message history and persistence
